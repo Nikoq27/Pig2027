@@ -56,6 +56,8 @@ struct PigView: View {
     @State var GameOver: String = ""
     
     @State private var winningScore: Int = 100
+    
+    @State private var isTextFieldDisabled = false
 
     // MARK: - Computed properties
 
@@ -80,7 +82,7 @@ struct PigView: View {
                     .textFieldStyle(.roundedBorder)
                     .frame(width: 80)
                     .multilineTextAlignment(.center)
-                    .disabled(!gameIsOver && (playerOneScore > 0 || playerTwoScore > 0))
+                    .disabled(!gameIsOver && isTextFieldDisabled == true)
             }
             
             HStack(spacing: 16) {
@@ -225,15 +227,8 @@ struct PigView: View {
             // TRY: Change this message.
             message = "You rolled a \(roll). Roll again, or hold?"
         }
-        if playerOneScore >= winningScore {
-            
-            GameOver = "PLAYER ONE WINS"
-            gameIsOver = true
-        }else if playerTwoScore >= winningScore {
-            
-            GameOver = "PLAYER TWO WINS"
-            gameIsOver = true
-        }
+        isTextFieldDisabled = true
+        
     }
  
     // Banks the turn total into the current player's score, then ends the turn.
@@ -246,6 +241,16 @@ struct PigView: View {
         message = "Player \(currentPlayer) banked \(turnTotal) points."
         turnTotal = 0
         switchPlayer()
+        
+        if playerOneScore >= winningScore {
+            
+            GameOver = "PLAYER ONE WINS"
+            gameIsOver = true
+        }else if playerTwoScore >= winningScore {
+            
+            GameOver = "PLAYER TWO WINS"
+            gameIsOver = true
+        }
     }
 
     // Passes the turn to the other player.
@@ -261,7 +266,7 @@ struct PigView: View {
             turnColor = playerTwoColor
         }
     }
-
+    
     // Sets everything back to the way it was at the start.
     func startNewGame() {
         playerOneScore = 0
@@ -272,6 +277,7 @@ struct PigView: View {
         dieSymbol = "questionmark.square.fill"
         message = "Player 1 goes first. Click Roll to start."
         gameIsOver = false
+        
     }
 }
 

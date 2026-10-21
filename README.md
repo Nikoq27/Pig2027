@@ -11,7 +11,7 @@ You against a friend. You move first, then your friend's turn
 ## What I added
  
 - Win condition for either player
-- Adjustable target score
+- Adjustable target score that locks when mid-game
 - Reset button after a win
 - Win credits (e.g "PLAYER ONE WINS")
  
