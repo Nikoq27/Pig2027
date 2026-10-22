@@ -19,7 +19,7 @@ import SwiftUI
 // Each player has their own colour.
 // TRY: Change these two colours. Try Color.purple, Color.green or Color.pink.
 let playerOneColor: Color = Color.blue
-let playerTwoColor: Color = Color.orange
+let playerTwoColor: Color = Color.red
 
 // The game itself: what it remembers, what it shows on the screen,
 // and what it does when you click a button.
@@ -277,6 +277,7 @@ struct PigView: View {
         dieSymbol = "questionmark.square.fill"
         message = "Player 1 goes first. Click Roll to start."
         gameIsOver = false
+        isTextFieldDisabled = false
         
     }
 }
