@@ -33,10 +33,15 @@ struct PigView: View {
     // The points each player has banked. Banked points are safe.
     @State var playerOneScore: Int = 0
     @State var playerTwoScore: Int = 0
+   // It tells whether the game is over or not
     @State var gameIsOver = false
     // The points collected so far on this turn.
     // They are not safe until the player clicks Hold.
     @State var turnTotal: Int = 0
+    
+    // The Total amount of wins either player has
+    @State var P1TotalWins: Int = 0
+    @State var P2TotalWins: Int = 0
 
     // Whose turn it is: 1 or 2.
     @State var currentPlayer: Int = 1
@@ -52,12 +57,13 @@ struct PigView: View {
 
     // A message that tells the players what just happened.
     @State var message: String = "Player 1 goes first. Click Roll to start."
-    
+    // Message that says which player has won, but is left blank to start as no one has won yet
     @State var GameOver: String = ""
     
+    // The winning score that either player must attain to win
     @State private var winningScore: Int = 100
-    
-    @State private var isTextFieldDisabled = false
+    // Checking whether or not someone can change the textfield/ winning score mid game
+    @State private var TextFieldDisabled = false
 
     // MARK: - Computed properties
 
@@ -77,13 +83,17 @@ struct PigView: View {
             HStack {
                 Text("Target Score:")
                     .font(.headline)
+                    .frame(width: 100)
+                    .background(playerOneColor.opacity(0.5))
+                    .clipShape(RoundedRectangle(cornerRadius: 90))
                 
                 TextField("100", value: $winningScore, format: .number)
                     .textFieldStyle(.roundedBorder)
-                    .frame(width: 80)
+                    .frame(width: 40)
                     .multilineTextAlignment(.center)
-                    .disabled(!gameIsOver && isTextFieldDisabled == true)
+                    .disabled(!gameIsOver && TextFieldDisabled)
             }
+            
             
             HStack(spacing: 16) {
                 VStack {
@@ -92,11 +102,13 @@ struct PigView: View {
                     Text("\(playerOneScore)")
                         .font(.system(size: 48, weight: .bold))
                         .monospacedDigit()
+                    
+                    Text("PLAYER 1 TOTAL WINS = \(P1TotalWins)")
                 }
                 .frame(maxWidth: .infinity)
                 .padding()
                 .background(playerOneColor.opacity(0.2))
-                .clipShape(RoundedRectangle(cornerRadius: 40))
+                .clipShape(RoundedRectangle(cornerRadius: 90))
                 
                 VStack {
                     Text("Player 2")
@@ -104,11 +116,13 @@ struct PigView: View {
                     Text("\(playerTwoScore)")
                         .font(.system(size: 48, weight: .bold))
                         .monospacedDigit()
+                    
+                    Text("PLAYER 2 TOTAL WINS = \(P2TotalWins)")
                 }
                 .frame(maxWidth: .infinity)
                 .padding()
                 .background(playerTwoColor.opacity(0.2))
-                .clipShape(RoundedRectangle(cornerRadius: 40))
+                .clipShape(RoundedRectangle(cornerRadius: 90))
             }
             
             Spacer()
@@ -209,8 +223,7 @@ struct PigView: View {
     // Rolls the die once for the current player.
     func rollDie() {
 
-        // Pick a random whole number from 1 to 6, just like a real die.
-        let roll: Int = Int.random(in: 2...6)
+        let roll: Int = rollOneDie()
         rollsThisTurn += 1
 
         // Show the matching die face. For a roll of 4, the symbol is "die.face.4.fill".
@@ -227,9 +240,24 @@ struct PigView: View {
             // TRY: Change this message.
             message = "You rolled a \(roll). Roll again, or hold?"
         }
-        isTextFieldDisabled = true
+        TextFieldDisabled = true
+        
         
     }
+    
+    // Picks a random whole number from 1 to 6, just like a real die.
+    func rollOneDie() -> Int {
+        let roll: Int = Int.random(in: 1...6)
+        return roll
+    }
+     
+    // Answers true when a score is high enough to win.
+    func hasWon(score: Int) -> Bool {
+        
+        return score >= winningScore
+        
+    }
+    
  
     // Banks the turn total into the current player's score, then ends the turn.
     func hold() {
@@ -246,10 +274,13 @@ struct PigView: View {
             
             GameOver = "PLAYER ONE WINS"
             gameIsOver = true
+            P1TotalWins += 1
         }else if playerTwoScore >= winningScore {
             
             GameOver = "PLAYER TWO WINS"
             gameIsOver = true
+            P2TotalWins += 1
+
         }
     }
 
@@ -277,7 +308,7 @@ struct PigView: View {
         dieSymbol = "questionmark.square.fill"
         message = "Player 1 goes first. Click Roll to start."
         gameIsOver = false
-        isTextFieldDisabled = false
+        TextFieldDisabled = false
         
     }
 }
