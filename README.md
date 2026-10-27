@@ -1,4 +1,4 @@
-# Rock Paper Scissors
+# PIG
  
 You against a friend. You move first, then your friend's turn
  
@@ -14,6 +14,7 @@ You against a friend. You move first, then your friend's turn
 - Adjustable target score that locks when starting game using textfield (It is a topic that we haven't learnt yet, but I can explain how it works and what it does)
 - Reset button after a win & disabled other buttons once game is over (Used !gameIsOver{} to disable buttons once game is actually over)
 - Win credits (e.g "PLAYER ONE WINS") (Used V-Stacks & H-Stacks to create text right where I want it on the screen)
+- Added a double dice feature where the players can pick to play with either one or two dices
  
 ## Credits
  
@@ -55,5 +56,17 @@ Chosen input: Won for player 1 multiple times
 Should happen: It should change the P1 total wins up by 1 every time that player wins
 
 Did happen: Changed the P1 total wins up by 1 every time that player wins
+
+STATUS: SUCCESS
+
+4. 
+
+Test: Adding another dice
+
+Chosen input: Adding a button that adds another die
+
+Should happen: When one clicks that button, another dice should show up with added score and added risk
+
+Did happen: Another dice showed up with added score and added risk
 
 STATUS: SUCCESS

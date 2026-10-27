@@ -34,7 +34,7 @@ struct PigView: View {
     @State var playerOneScore: Int = 0
     @State var playerTwoScore: Int = 0
    // It tells whether the game is over or not
-    @State var gameIsOver = false
+    @State var gameIsOver: Bool = false
     // The points collected so far on this turn.
     // They are not safe until the player clicks Hold.
     @State var turnTotal: Int = 0
@@ -53,17 +53,22 @@ struct PigView: View {
     @State var rollsThisTurn: Int = 0
     
     // The name of the SF Symbol that shows the die.
-    @State var dieSymbol: String = "questionmark.square.fill"
+    @State var dieSymbol1: String = "questionmark.square.fill"
+
+    @State var dieSymbol2: String = "questionmark.square.fill"
 
     // A message that tells the players what just happened.
     @State var message: String = "Player 1 goes first. Click Roll to start."
     // Message that says which player has won, but is left blank to start as no one has won yet
     @State var GameOver: String = ""
+    // Allows the player to choice whether or not they want to play with 2 dice
+    @State var NewDice: Bool = false
+
     
     // The winning score that either player must attain to win
     @State private var winningScore: Int = 100
     // Checking whether or not someone can change the textfield/ winning score mid game
-    @State private var TextFieldDisabled = false
+    @State private var TextFieldDisabled: Bool = false
 
     // MARK: - Computed properties
 
@@ -163,10 +168,18 @@ struct PigView: View {
             
             // The die.
             // TRY: Change the size of the die from 120 to something bigger or smaller.
-            Image(systemName: dieSymbol)
-                .font(.system(size: 120))
-                .foregroundStyle(turnColor)
-            
+            HStack{
+                
+                Image(systemName: dieSymbol1)
+                    .font(.system(size: 120))
+                    .foregroundStyle(turnColor)
+                if NewDice == true {
+                    
+                    Image(systemName: dieSymbol2)
+                        .font(.system(size: 120))
+                        .foregroundStyle(turnColor)
+                }
+            }
             Text("Turn total: \(turnTotal)    Rolls: \(rollsThisTurn)")
                 .font(.title2)
                 .bold()
@@ -197,6 +210,11 @@ struct PigView: View {
                 }
                 .buttonStyle(.bordered)
                 
+                Button("Double Dice", systemImage: "dice.fill") {
+                    MoreDice()
+                }
+                .buttonStyle(.bordered)
+                
             }
             .font(.title2)
             .bold()
@@ -223,22 +241,30 @@ struct PigView: View {
     // Rolls the die once for the current player.
     func rollDie() {
 
-        let roll: Int = rollOneDie()
+        let roll1: Int = rollOneDie()
+        let roll2: Int = rollTwoDie()
         rollsThisTurn += 1
 
         // Show the matching die face. For a roll of 4, the symbol is "die.face.4.fill".
-        dieSymbol = "die.face.\(roll).fill"
+        dieSymbol1 = "die.face.\(roll1).fill"
+        dieSymbol2 = "die.face.\(roll2).fill"
 
-        if roll == 1 {
+        if roll1 == 1{
+            // A 1 wipes out the turn total and ends the turn.
+            message = "Oh no, a 1! Player \(currentPlayer) loses \(turnTotal) points."
+            turnTotal = 0
+            switchPlayer()
+        }else if roll2 == 1{
             // A 1 wipes out the turn total and ends the turn.
             message = "Oh no, a 1! Player \(currentPlayer) loses \(turnTotal) points."
             turnTotal = 0
             switchPlayer()
         } else {
             // Any other roll is added to the turn total.
-            turnTotal += roll
+            turnTotal += roll1
+            turnTotal += roll2
             // TRY: Change this message.
-            message = "You rolled a \(roll). Roll again, or hold?"
+            message = "You rolled a \(roll1) and a \(roll2). Roll again, or hold?"
         }
         TextFieldDisabled = true
         
@@ -247,8 +273,12 @@ struct PigView: View {
     
     // Picks a random whole number from 1 to 6, just like a real die.
     func rollOneDie() -> Int {
-        let roll: Int = Int.random(in: 1...6)
-        return roll
+        let roll1: Int = Int.random(in: 1...6)
+        return roll1
+    }
+    func rollTwoDie() -> Int {
+        let roll2: Int = Int.random(in: 1...6)
+        return roll2
     }
      
     // Answers true when a score is high enough to win.
@@ -305,10 +335,21 @@ struct PigView: View {
         turnTotal = 0
         currentPlayer = 1
         turnColor = playerOneColor
-        dieSymbol = "questionmark.square.fill"
+        dieSymbol1 = "questionmark.square.fill"
+        dieSymbol2 = "questionmark.square.fill"
         message = "Player 1 goes first. Click Roll to start."
         gameIsOver = false
         TextFieldDisabled = false
+        NewDice = false
+        
+    }
+    func MoreDice(){
+        if NewDice == true {
+            
+            NewDice = false
+        }else {
+            NewDice = true
+        }
         
     }
 }
