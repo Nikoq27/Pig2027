@@ -14,12 +14,19 @@ You against a friend. You move first, then your friend's turn
 - Adjustable target score that locks when starting game using textfield (It is a topic that we haven't learnt yet, but I can explain how it works and what it does)
 - Reset button after a win & disabled other buttons once game is over (Used !gameIsOver{} to disable buttons once game is actually over)
 - Win credits (e.g "PLAYER ONE WINS") (Used V-Stacks & H-Stacks to create text right where I want it on the screen)
-- Added a double dice feature where the players can pick to play with either one or two dices
+- Added a double dice feature where the players can pick to play with either one or two dices (Turned )
  
 ## Credits
  
 - The starting game was written by Mr. Gordon.
 - Used Gemini to fix broken code/ errors
+
+## How it works
+
+I added a adjustable target score which locks when starting game by doing:
+
+
+
 
 ##Testing updates
 
@@ -70,3 +77,15 @@ Should happen: When one clicks that button, another dice should show up with add
 Did happen: Another dice showed up with added score and added risk
 
 STATUS: SUCCESS
+
+5. 
+
+Test: Fixing rolling mechanic
+
+Chosen input: Rolling the dice with only 1 die
+
+Should happen: Gives the score for only 1 die (e.g 1-6)
+
+Did happen: Gives the score for only 1 die (e.g 1-6)
+
+Status: SUCCESS

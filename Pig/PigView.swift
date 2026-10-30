@@ -69,6 +69,10 @@ struct PigView: View {
     @State private var winningScore: Int = 100
     // Checking whether or not someone can change the textfield/ winning score mid game
     @State private var TextFieldDisabled: Bool = false
+    //Asks if func rollDie is clicked
+    @State private var isRollDieClicked: Bool = false
+    //Asks if func Hold clicked
+    @State private var isHoldClicked: Bool = false
 
     // MARK: - Computed properties
 
@@ -214,7 +218,7 @@ struct PigView: View {
                     MoreDice()
                 }
                 .buttonStyle(.bordered)
-                
+                .disabled(isRollDieClicked || isHoldClicked)
             }
             .font(.title2)
             .bold()
@@ -244,7 +248,7 @@ struct PigView: View {
         let roll1: Int = rollOneDie()
         let roll2: Int = rollTwoDie()
         rollsThisTurn += 1
-
+        
         // Show the matching die face. For a roll of 4, the symbol is "die.face.4.fill".
         dieSymbol1 = "die.face.\(roll1).fill"
         dieSymbol2 = "die.face.\(roll2).fill"
@@ -254,7 +258,7 @@ struct PigView: View {
             message = "Oh no, a 1! Player \(currentPlayer) loses \(turnTotal) points."
             turnTotal = 0
             switchPlayer()
-        }else if roll2 == 1{
+        }else if roll2 == 1 && NewDice == true{
             // A 1 wipes out the turn total and ends the turn.
             message = "Oh no, a 1! Player \(currentPlayer) loses \(turnTotal) points."
             turnTotal = 0
@@ -262,13 +266,20 @@ struct PigView: View {
         } else {
             // Any other roll is added to the turn total.
             turnTotal += roll1
-            turnTotal += roll2
+            
+            if NewDice == true{
+                turnTotal += roll2
+            }
             // TRY: Change this message.
-            message = "You rolled a \(roll1) and a \(roll2). Roll again, or hold?"
+            if NewDice == true{
+                message = "You rolled a \(roll1) and a \(roll2). Roll again, or hold?"
+            }else {
+                message = "You rolled a \(roll1). Roll again, or hold?"
+            }
         }
         TextFieldDisabled = true
         
-        
+        isRollDieClicked = true
     }
     
     // Picks a random whole number from 1 to 6, just like a real die.
@@ -298,7 +309,8 @@ struct PigView: View {
         }
         message = "Player \(currentPlayer) banked \(turnTotal) points."
         turnTotal = 0
-        switchPlayer()
+        
+       
         
         if playerOneScore >= winningScore {
             
@@ -310,7 +322,15 @@ struct PigView: View {
             GameOver = "PLAYER TWO WINS"
             gameIsOver = true
             P2TotalWins += 1
+            
+            
 
+        }
+        isHoldClicked = true
+        if !gameIsOver{
+            switchPlayer()
+        }else {
+            
         }
     }
 
@@ -341,7 +361,8 @@ struct PigView: View {
         gameIsOver = false
         TextFieldDisabled = false
         NewDice = false
-        
+        isRollDieClicked = false
+        isHoldClicked = false
     }
     func MoreDice(){
         if NewDice == true {
