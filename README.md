@@ -23,9 +23,13 @@ You against a friend. You move first, then your friend's turn
 
 ## How it works
 
-I added a adjustable target score which locks when starting game by doing:
+I added a adjustable target score which locks when starting game by:
 
-
+- Creating a value for WinningScore
+- Setting the original WinningScore value to be 100
+- Creating a textfield that changes what WinningScore is 
+- Creating a text that tells the player what the textfield does and changes
+- Creating a disable line at the end of the textfield that stops the player from changing the WinningScore mid-game
 
 
 ##Testing updates
